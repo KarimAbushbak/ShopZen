@@ -1,0 +1,32 @@
+class ManagerAssets {
+  static const String splash = 'assets/images/splash/splash.svg';
+  static const String outBoarding = 'assets/images/out_boarding/out_boarding.svg';
+  static const String google = 'assets/images/auth/google.svg';
+  static const String apple = 'assets/images/auth/apple.svg';
+  static const String bell = 'assets/images/home/bell.svg';
+  static const String search = 'assets/images/home/search.svg';
+  static const String homeBanner = 'assets/images/home/home_banner.png';
+  static const String item = 'assets/images/home/item.png';
+  static const String searchVisual = 'assets/images/home/search_visual.svg';
+  static const String category1 = 'assets/images/home/category/category1.svg';
+  static const String category2 = 'assets/images/home/category/category2.svg';
+  static const String category3 = 'assets/images/home/category/category3.svg';
+  static const String category4 = 'assets/images/home/category/category4.svg';
+  static const String category5 = 'assets/images/home/category/category5.svg';
+  static const String star = 'assets/images/home/star.svg';
+  static const String accountIcon = 'assets/images/home/account_icon.svg';
+  static const String homeIcon = 'assets/images/home/home_icon.svg';
+  static const String cartIcon = 'assets/images/home/cart_icon.svg';
+  static const String savedIcon = 'assets/images/home/saved_icon.svg';
+  static const String success = 'assets/images/auth/success.svg';
+  static const String emptyFavorite = 'assets/images/favorite/empty_favorite.svg';
+  static const String cart = 'assets/images/cart/cart.svg';
+  static const String delete = 'assets/images/cart/delete.svg';
+  static const String credit = 'assets/images/account/credit.svg';
+  static const String help = 'assets/images/account/help.svg';
+  static const String invite = 'assets/images/account/invite.svg';
+  static const String notification = 'assets/images/account/notification.svg';
+  static const String order = 'assets/images/account/order.svg';
+  static const String privacy = 'assets/images/account/privacy.svg';
+  static const String user = 'assets/images/account/user.svg';
+}
