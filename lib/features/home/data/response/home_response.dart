@@ -1,118 +1,137 @@
+import 'package:shopzen/core/extensions/extensions.dart';
+
 class HomeResponse {
-  List<HomeDataResponse>? data;
-  bool? success;
-  int? status;
+  List<HomeDataResponse> data;
+  bool success;
+  int status;
 
-  HomeResponse({this.data, this.success, this.status});
+  HomeResponse({
+    required this.data,
+    required this.success,
+    required this.status,
+  });
 
-  HomeResponse.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = <HomeDataResponse>[];
-      json['data'].forEach((v) {
-        data!.add( HomeDataResponse.fromJson(v));
-      });
-    }
-    success = json['success'];
-    status = json['status'];
+  factory HomeResponse.fromJson(Map<String, dynamic> json) {
+    return HomeResponse(
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map((e) => HomeDataResponse.fromJson(e))
+              .toList() ??
+          [],
+      success: json['success'] as bool? ?? false,
+      status: json['status'] as int? ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    data['success'] = success;
-    data['status'] = status;
-    return data;
+    return {
+      'data': data.map((e) => e.toJson()).toList(),
+      'success': success,
+      'status': status,
+    };
   }
 }
 
 class HomeDataResponse {
-  int? id;
-  String? name;
-  List<String>? photos;
-  String? thumbnailImage;
-  double? basePrice;
-  double? baseDiscountedPrice;
-  int? todaysDeal;
-  int? featured;
-  String? unit;
-  int? discount;
-  String? discountType;
-  int? rating;
-  int? sales;
-  HomeLinksResponse? links;
+  final int id;
+  final String name;
+  final List<String> photos;
+  final String thumbnailImage;
+  final double basePrice;
+  final double baseDiscountedPrice;
+  final int todaysDeal;
+  final int featured;
+  final String unit;
+  final int discount;
+  final String discountType;
+  final int rating;
+  final int sales;
+  final HomeLinksResponse? links;
 
-  HomeDataResponse(
-      {this.id,
-        this.name,
-        this.photos,
-        this.thumbnailImage,
-        this.basePrice,
-        this.baseDiscountedPrice,
-        this.todaysDeal,
-        this.featured,
-        this.unit,
-        this.discount,
-        this.discountType,
-        this.rating,
-        this.sales,
-        this.links});
+  HomeDataResponse({
+    required this.id,
+    required this.name,
+    required this.photos,
+    required this.thumbnailImage,
+    required this.basePrice,
+    required this.baseDiscountedPrice,
+    required this.todaysDeal,
+    required this.featured,
+    required this.unit,
+    required this.discount,
+    required this.discountType,
+    required this.rating,
+    required this.sales,
+    this.links,
+  });
 
-  HomeDataResponse.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    photos = json['photos'].cast<String>();
-    thumbnailImage = json['thumbnail_image'];
-    basePrice = double.parse(json['base_price'].toString());
-    baseDiscountedPrice = double.parse(json['base_discounted_price'].toString());
-    todaysDeal = json['todays_deal'];
-    featured = json['featured'];
-    unit = json['unit'];
-    discount = json['discount'];
-    discountType = json['discount_type'];
-    rating = json['rating'];
-    sales = json['sales'];
-    links = json['links'] != null ?  HomeLinksResponse.fromJson(json['links']) : null;
+  factory HomeDataResponse.fromJson(Map<String, dynamic> json) {
+    return HomeDataResponse(
+      id: (json['id'] as int?).onNull(),
+      name: (json['name'] as String?).onNull(),
+      photos: (json['photos'] as List?)!
+          .map((e) => e.toString())
+          .toList()
+          .onNull(),
+      thumbnailImage: (json['thumbnail_image'] as String?).onNull(),
+      basePrice: double.tryParse(json['base_price'].toString()).onNull(),
+      baseDiscountedPrice: double.tryParse(
+        json['base_discounted_price'].toString(),
+      ).onNull(),
+      todaysDeal: (json['todays_deal'] as int?).onNull(),
+      featured: (json['featured'] as int?).onNull(),
+      unit: (json['unit'] as String?).onNull(),
+      discount: (json['discount'] as int?).onNull(),
+      discountType: (json['discount_type'] as String?).onNull(),
+      rating: (json['rating'] as int?).onNull(),
+      sales: (json['sales'] as int?).onNull(),
+      links: json['links'] != null
+          ? HomeLinksResponse.fromJson(json['links'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    data['photos'] = photos;
-    data['thumbnail_image'] = thumbnailImage;
-    data['base_price'] = basePrice;
-    data['base_discounted_price'] = baseDiscountedPrice;
-    data['todays_deal'] = todaysDeal;
-    data['featured'] = featured;
-    data['unit'] = unit;
-    data['discount'] = discount;
-    data['discount_type'] = discountType;
-    data['rating'] = rating;
-    data['sales'] = sales;
-    if (links != null) {
-      data['links'] = links!.toJson();
-    }
-    return data;
+    return {
+      'id': id,
+      'name': name,
+      'photos': photos,
+      'thumbnail_image': thumbnailImage,
+      'base_price': basePrice,
+      'base_discounted_price': baseDiscountedPrice,
+      'todays_deal': todaysDeal,
+      'featured': featured,
+      'unit': unit,
+      'discount': discount,
+      'discount_type': discountType,
+      'rating': rating,
+      'sales': sales,
+      if (links != null) 'links': links!.toJson(),
+    };
   }
 }
 
 class HomeLinksResponse {
-  String? details;
-  String? reviews;
-  String? related;
+  String details;
+  String reviews;
+  String related;
 
-  HomeLinksResponse({this.details, this.reviews, this.related});
+  HomeLinksResponse({
+    required this.details,
+    required this.reviews,
+    required this.related,
+  });
 
-  HomeLinksResponse.fromJson(Map<String, dynamic> json) {
-    details = json['details'];
-    reviews = json['reviews'];
-    related = json['related'];
+  factory HomeLinksResponse.fromJson(Map<String, dynamic> json) {
+    return HomeLinksResponse(
+      details: (json['details'] as String?).onNull(),
+      reviews: (json['reviews'] as String?).onNull(),
+      related: (json['related'] as String?).onNull(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['details'] = details;
     data['reviews'] = reviews;
     data['related'] = related;
