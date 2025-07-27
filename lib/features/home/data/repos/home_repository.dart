@@ -1,33 +1,41 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopzen/core/constants.dart';
 import 'package:shopzen/features/home/data/response/home_response.dart';
-import 'package:shopzen/features/home/domain/models/home_model.dart';
 import 'package:shopzen/features/home/data/mapper/home_mapper.dart';
+import 'package:shopzen/features/home/domain/models/home_model.dart';
 
 class HomeRepository {
-  Future get({required String endPoint, Map<String, String>? header}) async {
-    return await http.get(Uri.parse(endPoint), headers: header ?? {});
+  final http.Client client;
+
+  HomeRepository({http.Client? client}) : client = client ?? http.Client();
+
+  Future<http.Response> _get(String url, {Map<String, String>? headers}) async {
+    return await client.get(Uri.parse(url), headers: headers ?? {});
   }
 
-  Future<HomeModel> home({required BuildContext context}) async {
-    http.Response response = await get(endPoint: ApiRequest.home);
-    int statusCode = response.statusCode;
-    if (statusCode >= 200 && statusCode < 300) {
-      var json = jsonDecode(response.body);
-      return HomeResponse.fromJson(json).toDomain();
-    } else if (statusCode >= 400 && statusCode < 500) {
-      var json = jsonDecode(response.body);
+  Future<HomeModel> fetchHomeData() async {
+    try {
+      final response = await _get(ApiRequest.home);
+
+      final statusCode = response.statusCode;
+      final body = jsonDecode(response.body);
+
+      if (statusCode >= 200 && statusCode < 300) {
+        return HomeResponse.fromJson(body).toDomain();
+      }
+
       return HomeModel(
         data: [],
-        success: json['success'],
-        status: json['status'],
+        success: body['success'] ?? false,
+        status: body['status'] ?? statusCode,
       );
-    } else if (statusCode >= 500 && statusCode < 600) {
-      return HomeModel(data: [], success: false, status: 500);
+    } catch (e) {
+      return HomeModel(
+        data: [],
+        success: false,
+        status: 500,
+      );
     }
-    return HomeModel(data: [], success: false, status: 404);
   }
 }
