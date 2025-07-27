@@ -20,7 +20,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit()..fetchProducts(context: context),
+          create: (context) => HomeCubit()..fetchProducts(),
         ),
         BlocProvider(create: (_) => CartCubit()),
         BlocProvider(create: (_) => AccountCubit()),

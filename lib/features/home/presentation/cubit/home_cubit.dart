@@ -10,42 +10,44 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeLoading());
   HomeRepository homeRepository = HomeRepository();
 
-  Future fetchProducts({required BuildContext context}) async {
+  Future<void> fetchProducts() async {
+    emit(HomeLoading());
+
     try {
-      final HomeModel homeModel = await homeRepository.home(context: context);
+      final HomeModel homeModel = await homeRepository.fetchHomeData();
 
-      List<HomeDataModel> featuredProducts = [];
-      List<HomeDataModel> discountedProducts = [];
+      final allProducts = homeModel.data;
 
-      for (HomeDataModel item in homeModel.data) {
-        if (item.featured == 1) {
-          featuredProducts.add(item);
-        }
-        if (item.discount > 0) {
-          discountedProducts.add(item);
-        }
-      }
+      final featuredProducts = allProducts
+          .where((item) => item.featured == 1)
+          .toList();
 
-      emit(HomeLoaded(
-        allProducts: homeModel.data,
-        featuredProducts: featuredProducts,
-        discountedProducts: discountedProducts,
-      ));
-    } catch (e) {
+      final discountedProducts = allProducts
+          .where((item) => item.discount > 0)
+          .toList();
+
+      emit(
+        HomeLoaded(
+          allProducts: allProducts,
+          featuredProducts: featuredProducts,
+          discountedProducts: discountedProducts,
+        ),
+      );
+    } on Exception catch (e) {
       emit(HomeError(e.toString()));
     }
   }
 
   void toggleFavorite(int productId) {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      final currentFavorites = Set<int>.from(currentState.favoriteProductIds);
-      if (currentFavorites.contains(productId)) {
-        currentFavorites.remove(productId);
-      } else {
-        currentFavorites.add(productId);
-      }
-      emit(currentState.copyWith(favoriteProductIds: currentFavorites));
-    }
+    if (state is! HomeLoaded) return;
+
+    final currentState = state as HomeLoaded;
+    final currentFavorites = Set<int>.from(currentState.favoriteProductIds);
+
+    currentFavorites.contains(productId)
+        ? currentFavorites.remove(productId)
+        : currentFavorites.add(productId);
+
+    emit(currentState.copyWith(favoriteProductIds: currentFavorites));
   }
 }
